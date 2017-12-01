@@ -1,0 +1,19 @@
+This folder contains tools for backing up the rpi.  Rpi SD cards become corrupt pretty frequently, especialy when power cycling is happening, so it's important to back up often.
+
+This system is taken more or less literally from:
+https://raspberrypi.stackexchange.com/questions/5427/can-a-raspberry-pi-be-used-to-create-a-backup-of-itself
+
+The steps to backup:
+1)  Insert an external hard drive via USB
+2)  mount it at /mnt/usbhd
+3)  run ./do_backup.sh
+
+The steps to restore (I think....):
+1)  Make a new raspian lite SD card, (I don't think it has to be fresh as long as the boot sector works),
+2)  On an external unix-running computer:
+3)  mount it
+4)  Run this command:
+
+rsync -av --delete-during /mnt/usbhd/pi_backup/ /mnt/sdcard_partition2/
+
+
