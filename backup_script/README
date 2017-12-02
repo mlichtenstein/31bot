@@ -16,4 +16,10 @@ The steps to restore (I think....):
 
 rsync -av --delete-during /mnt/usbhd/pi_backup/ /mnt/sdcard_partition2/
 
+----
 
+Here's how you mount:
+Put in an SD card with a big partition of type ext3
+  Use fdisk -l to id it
+  If it's not type ext3, use fdisk to clear out a partition, then 
+ 
