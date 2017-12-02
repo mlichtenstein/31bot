@@ -4,7 +4,7 @@ This system is taken more or less literally from:
 https://raspberrypi.stackexchange.com/questions/5427/can-a-raspberry-pi-be-used-to-create-a-backup-of-itself
 
 The steps to backup:
-1)  Insert an external hard drive via USB
+1)  Insert an external hard drive via USB  (thumb drive, SD, whatevs)
 2)  mount it at /mnt/usbhd
 3)  run ./do_backup.sh
 
@@ -14,12 +14,20 @@ The steps to restore (I think....):
 3)  mount it
 4)  Run this command:
 
-rsync -av --delete-during /mnt/usbhd/pi_backup/ /mnt/sdcard_partition2/
+rsync -vraH /mnt/usbhd/raspberrypi-backup/ /
+
+and then cross your fingers and pray
 
 ----
 
 Here's how you mount:
 Put in an SD card with a big partition of type ext3
-  Use fdisk -l to id it
-  If it's not type ext3, use fdisk to clear out a partition, then 
+  Use fdisk -l to id it, make sure it has a large ext3 partition *
+  sudo mkdir /mnt/usbhd
+  sudo mount /dev/sdb /mnt/usbhd
+
+
+
+
+  If it's not type ext3, use fdisk to clear out a partition, then mkext2 (I think?) to make it ext3
  
