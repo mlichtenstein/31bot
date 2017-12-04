@@ -89,42 +89,42 @@ class Raspi_StepperMotor:
 				self.currentstep %= self.MICROSTEPS * 4
 
 				pwm_a = pwm_b = 0
-				if (self.currentstep >= 0) and (self.currentstep < self.MICROSTEPS):
-					pwm_a = self.MICROSTEP_CURVE[self.MICROSTEPS - self.currentstep]
-					pwm_b = self.MICROSTEP_CURVE[self.currentstep]
-				elif (self.currentstep >= self.MICROSTEPS) and (self.currentstep < self.MICROSTEPS*2):
-					pwm_a = self.MICROSTEP_CURVE[self.currentstep - self.MICROSTEPS]
-					pwm_b = self.MICROSTEP_CURVE[self.MICROSTEPS*2 - self.currentstep]
-				elif (self.currentstep >= self.MICROSTEPS*2) and (self.currentstep < self.MICROSTEPS*3):
-					pwm_a = self.MICROSTEP_CURVE[self.MICROSTEPS*3 - self.currentstep]
-					pwm_b = self.MICROSTEP_CURVE[self.currentstep - self.MICROSTEPS*2]
-				elif (self.currentstep >= self.MICROSTEPS*3) and (self.currentstep < self.MICROSTEPS*4):
-					pwm_a = self.MICROSTEP_CURVE[self.currentstep - self.MICROSTEPS*3]
-					pwm_b = self.MICROSTEP_CURVE[self.MICROSTEPS*4 - self.currentstep]
+			if (self.currentstep >= 0) and (self.currentstep < self.MICROSTEPS):
+				pwm_a = self.MICROSTEP_CURVE[self.MICROSTEPS - self.currentstep]
+				pwm_b = self.MICROSTEP_CURVE[self.currentstep]
+			elif (self.currentstep >= self.MICROSTEPS) and (self.currentstep < self.MICROSTEPS*2):
+				pwm_a = self.MICROSTEP_CURVE[self.currentstep - self.MICROSTEPS]
+				pwm_b = self.MICROSTEP_CURVE[self.MICROSTEPS*2 - self.currentstep]
+			elif (self.currentstep >= self.MICROSTEPS*2) and (self.currentstep < self.MICROSTEPS*3):
+				pwm_a = self.MICROSTEP_CURVE[self.MICROSTEPS*3 - self.currentstep]
+				pwm_b = self.MICROSTEP_CURVE[self.currentstep - self.MICROSTEPS*2]
+			elif (self.currentstep >= self.MICROSTEPS*3) and (self.currentstep < self.MICROSTEPS*4):
+				pwm_a = self.MICROSTEP_CURVE[self.currentstep - self.MICROSTEPS*3]
+				pwm_b = self.MICROSTEP_CURVE[self.MICROSTEPS*4 - self.currentstep]
 
 
-				# go to next 'step' and wrap around
-				self.currentstep += self.MICROSTEPS * 4
-				self.currentstep %= self.MICROSTEPS * 4
+		# go to next 'step' and wrap around
+		self.currentstep += self.MICROSTEPS * 4
+		self.currentstep %= self.MICROSTEPS * 4
 
-				# only really used for microstepping, otherwise always on!
-				self.MC._pwm.setPWM(self.PWMA, 0, pwm_a*16)
-				self.MC._pwm.setPWM(self.PWMB, 0, pwm_b*16)
-	
-				# set up coil energizing!
-				coils = [0, 0, 0, 0]
+		# only really used for microstepping, otherwise always on!
+		self.MC._pwm.setPWM(self.PWMA, 0, pwm_a*16)
+		self.MC._pwm.setPWM(self.PWMB, 0, pwm_b*16)
 
-				if (style == Raspi_MotorHAT.MICROSTEP):
-					if (self.currentstep >= 0) and (self.currentstep < self.MICROSTEPS):
-						coils = [1, 1, 0, 0]
-					elif (self.currentstep >= self.MICROSTEPS) and (self.currentstep < self.MICROSTEPS*2):
-						coils = [0, 1, 1, 0]
-					elif (self.currentstep >= self.MICROSTEPS*2) and (self.currentstep < self.MICROSTEPS*3):
-						coils = [0, 0, 1, 1]
-					elif (self.currentstep >= self.MICROSTEPS*3) and (self.currentstep < self.MICROSTEPS*4):
-						coils = [1, 0, 0, 1]
-					else:
-						step2coils = [ 	[1, 0, 0, 0], 
+		# set up coil energizing!
+		coils = [0, 0, 0, 0]
+
+		if (style == Raspi_MotorHAT.MICROSTEP):
+			if (self.currentstep >= 0) and (self.currentstep < self.MICROSTEPS):
+				coils = [1, 1, 0, 0]
+			elif(self.currentstep>=self.MICROSTEPS)and(self.currentstep<self.MICROSTEPS*2):
+				coils = [0, 1, 1, 0]
+			elif(self.currentstep>=self.MICROSTEPS*2)and(self.currentstep<self.MICROSTEPS*3):
+				coils = [0, 0, 1, 1]
+			elif(self.currentstep>=self.MICROSTEPS*3)and(self.currentstep<self.MICROSTEPS*4):
+				coils = [1, 0, 0, 1]
+		else:
+			step2coils = [ 	[1, 0, 0, 0], 
 				[1, 1, 0, 0],
 				[0, 1, 0, 0],
 				[0, 1, 1, 0],
@@ -152,7 +152,7 @@ class Raspi_StepperMotor:
 			s_per_s /= self.MICROSTEPS
 			steps *= self.MICROSTEPS
 
-		print s_per_s, " sec per step"
+		print(s_per_s, " sec per step")
 
 		for s in range(steps):
 			lateststep = self.oneStep(direction, stepstyle)
@@ -169,29 +169,31 @@ class Raspi_DCMotor:
 	def __init__(self, controller, num):
 		self.MC = controller
 		self.motornum = num
-		pwm = in1 = in2 = 0
+		pwm=0
+		in1=0
+		in2=0
 
-		if (num == 0):
-			 pwm = 8
-			 in2 = 9
-			 in1 = 10
+		if(num==0):
+				pwm = 8
+				in2 = 9
+				in1 = 10
 		elif (num == 1):
-			 pwm = 13
-			 in2 = 12
-			 in1 = 11
-		elif (num == 2):
-			 pwm = 2
-			 in2 = 3
-			 in1 = 4
-		elif (num == 3):
-			 pwm = 7
-			 in2 = 6
-			 in1 = 5
+				pwm=13
+				in2=12
+				in1=11
+		elif(num==2):
+				pwm=2
+				in2=3
+				in1=4
+		elif(num==3):
+				pwm=7
+				in2=6
+				in1=5
 		else:
 			raise NameError('MotorHAT Motor must be between 1 and 4 inclusive')
-		self.PWMpin = pwm
-		self.IN1pin = in1
-		self.IN2pin = in2
+		self.PWMpin=pwm
+		self.IN1pin=in1
+		self.IN2pin=in2
 
 	def run(self, command):
 		if not self.MC:
@@ -224,7 +226,7 @@ class Raspi_MotorHAT:
 	MICROSTEP = 4
 
 	def __init__(self, addr = 0x60, freq = 1600):
-		self._i2caddr = addr	    # default addr on HAT
+		self._i2caddr = addr            # default addr on HAT
 		self._frequency = freq		# default @1600Hz PWM freq
 		self.motors = [ Raspi_DCMotor(self, m) for m in range(4) ]
 		self.steppers = [ Raspi_StepperMotor(self, 1), Raspi_StepperMotor(self, 2) ]
@@ -243,7 +245,7 @@ class Raspi_MotorHAT:
 
 	def getStepper(self, steps, num):
 		if (num < 1) or (num > 2):
-			raise NameError('MotorHAT Stepper must be between 1 and 2 inclusive')
+			raiseNameError('MotorHATSteppermustbebetween1and2inclusive')
 		return self.steppers[num-1]
 
 	def getMotor(self, num):
